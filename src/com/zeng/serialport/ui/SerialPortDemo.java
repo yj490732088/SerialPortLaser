@@ -43,7 +43,7 @@ import com.zeng.serialport.utils.ShowUtils;
  * 
  * @author yangle
  */
-public class MainFrame_bak extends JFrame {
+public class SerialPortDemo extends JFrame {
 
 	/**
 	 * 程序界面宽度
@@ -74,7 +74,7 @@ public class MainFrame_bak extends JFrame {
 	private List<String> commList = null;
 	private SerialPort serialport;
 
-	public MainFrame_bak() {
+	public SerialPortDemo() {
 		initView();
 		initComponents();
 		actionListener();
@@ -307,7 +307,7 @@ public class MainFrame_bak extends JFrame {
 	public static void main(String args[]) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new MainFrame_bak().setVisible(true);
+				new SerialPortDemo().setVisible(true);
 			}
 		});
 	}

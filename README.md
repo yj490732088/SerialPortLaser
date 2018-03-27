@@ -1,3 +1,7 @@
+# SerialPortLaser
+上位机与激光控制器通信
+
+
 # SerialPortDemo
 串口通信Demo
 
