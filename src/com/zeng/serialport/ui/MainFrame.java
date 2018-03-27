@@ -36,16 +36,16 @@ public class MainFrame extends JFrame implements ActionListener {
 	private final static String ORDER_B2_INC = "0x06";		// 按键 +
 	private final static String ORDER_B2_DEC = "0x07";		// 按键 -
 	private final static String ORDER_B2_RECOVERY = "0x08";	// 恢复出厂化
-	private final static String ORDER_B2_QUERY = "0x09";		// 查询
+	private final static String ORDER_B2_QUERY = "0x09";	// 查询
 	private final static String ORDER_B2_TEST = "0x0a";		// 测试
 	private final static String ORDER_B3_DOWN = "0x01";		// 01-按下
-	private final static String ORDER_B3_UP = "0x02";			// 02-松开
+	private final static String ORDER_B3_UP = "0x02";		// 02-松开
 	private final static String ORDER_B4_SEND = "0x40";		// 发射
 	private final static String ORDER_B4_FUNC = "0x41";		// 功能切换
 	private final static String ORDER_B4_INC = "0x42";		// 按键 + 
 	private final static String ORDER_B4_DEC = "0x43";		// 按键 -
 	private final static String ORDER_B4_RECOVERY = "0x44";	// 恢复出厂化
-	private final static String ORDER_B4_QUERY = "0x45";		// 查询
+	private final static String ORDER_B4_QUERY = "0x45";	// 查询
 	private final static String ORDER_B4_TEST = "0x46";		// 测试
 	private final static String ORDER_B5 = "0x23";			// #
 	// 按键指令
@@ -92,8 +92,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	final static int FRAME_WIDTH =SERIAL_PORT_SETTING_PANEL_WIDTH + LOG_PANEL_WIDTH + FRAME_L_D_R_PADDING*2 + LANDSCAPE_MARGIN*5;	// Frame
 	final static int FRAME_HEIGHT = CONFIGURE_PANEL_HEIGHT + OK_HELP_CLOSE_PANEL_HEIGHT + PORTRAIT_MARGIN*3 + FRAME_U_PADDING + FRAME_L_D_R_PADDING + 10;
 	// 按钮
-	private JButton openSerialPortBtn; // 打开串口
-//	private JButton closeSerialPortBtn; // 关闭串口
+	private JButton SerialPorSwitchtBtn; // 串口开关
 	private JButton clearLogBtn; // 清除log
 	private JButton sendBtn; // 发射
 	private JButton funcBtn; // 功能切换
@@ -108,6 +107,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	// 文本域
 	private JScrollPane logScrollPane;
 	private JTextArea logTextArea; // 日志打印区域
+	private JScrollPane controlBroadInfoScrollPane;
 	private JTextArea controlBroadInfoTextArea; // 控制板信息文本域
 	// 面板
 	private JPanel configurePanel; // Configure区域
@@ -150,8 +150,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */
 	private void initObjs() {
 		// 按钮
-		openSerialPortBtn = new JButton("Open"); // 打开串口
-//		closeSerialPortBtn = new JButton("Close"); // 关闭串口
+		SerialPorSwitchtBtn = new JButton("Open"); // 串口开关
 		clearLogBtn = new JButton("Clear"); // 清除log
 		sendBtn = new JButton("发射"); // 发射
 		funcBtn = new JButton("功能键"); // 功能切换
@@ -172,6 +171,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		controlBroadInfoTextArea = new JTextArea(); // 控制板信息文本域
 		controlBroadInfoTextArea.setEditable(false); // 不可编辑
 		controlBroadInfoTextArea.setLineWrap(true); // 自动换行
+		controlBroadInfoScrollPane = new JScrollPane(controlBroadInfoTextArea);
+		controlBroadInfoScrollPane.setBackground(Color.WHITE);
 		// 面板
 		configurePanel = new JPanel(); // Configure面板
 		serialPortPanel = new JPanel(); // COM面板
@@ -226,8 +227,8 @@ public class MainFrame extends JFrame implements ActionListener {
 	 * Place components to 串口设置 面板
 	 */
 	private void placeComponentsToSerialPortSettingPanel() {
-		int btn_landscape_margin = (SERIAL_PORT_SETTING_PANEL_WIDTH - (LANDSCAPE_MARGIN*2 + LABEL_WIDTH + COMBO_BOX_WIDTH + BTN_WIDTH)*2)/3;
-		
+		int btn_landscape_margin = (SERIAL_PORT_SETTING_PANEL_WIDTH - (LANDSCAPE_MARGIN*2 + LABEL_WIDTH + COMBO_BOX_WIDTH)*2 - BTN_WIDTH)/2;
+			
 		serialPortPanel.setLayout(null);
 
 		commLabel.setForeground(Color.gray);
@@ -239,15 +240,13 @@ public class MainFrame extends JFrame implements ActionListener {
 		commChoice.setBounds(LANDSCAPE_MARGIN*2+LABEL_WIDTH, (SERIAL_PORT_SETTING_PANEL_HEIGHT-COMBO_BOX_HEIGHT)/2+5, COMBO_BOX_WIDTH, COMBO_BOX_HEIGHT);
 		baudrateLabel.setBounds(LANDSCAPE_MARGIN*3+LABEL_WIDTH+COMBO_BOX_WIDTH, (SERIAL_PORT_SETTING_PANEL_HEIGHT-LABEL_HEIGHT)/2+5, LABEL_WIDTH, LABEL_HEIGHT);
 		baudrateChoice.setBounds(LANDSCAPE_MARGIN*4+LABEL_WIDTH*2+COMBO_BOX_WIDTH, (SERIAL_PORT_SETTING_PANEL_HEIGHT-COMBO_BOX_HEIGHT)/2+5, COMBO_BOX_WIDTH, COMBO_BOX_HEIGHT);
-		openSerialPortBtn.setBounds(SERIAL_PORT_SETTING_PANEL_WIDTH-btn_landscape_margin*2-BTN_WIDTH*2, (SERIAL_PORT_SETTING_PANEL_HEIGHT-BTN_HEIGHT)/2+5, BTN_WIDTH, BTN_HEIGHT);
-//		closeSerialPortBtn.setBounds(SERIAL_PORT_SETTING_PANEL_WIDTH-btn_landscape_margin-BTN_WIDTH, (SERIAL_PORT_SETTING_PANEL_HEIGHT-BTN_HEIGHT)/2+5, BTN_WIDTH, BTN_HEIGHT);
+		SerialPorSwitchtBtn.setBounds(SERIAL_PORT_SETTING_PANEL_WIDTH-btn_landscape_margin-BTN_WIDTH, (SERIAL_PORT_SETTING_PANEL_HEIGHT-BTN_HEIGHT)/2+3, BTN_WIDTH, BTN_HEIGHT);
 		
 		serialPortPanel.add(commLabel);
 		serialPortPanel.add(commChoice);
 		serialPortPanel.add(baudrateLabel);
 		serialPortPanel.add(baudrateChoice);
-		serialPortPanel.add(openSerialPortBtn, BorderLayout.NORTH);	
-//		serialPortPanel.add(closeSerialPortBtn, BorderLayout.NORTH);	
+		serialPortPanel.add(SerialPorSwitchtBtn, BorderLayout.NORTH);	
 	}
 
 	/**
@@ -256,10 +255,10 @@ public class MainFrame extends JFrame implements ActionListener {
 	private void placeComponentsToControlBroadPanel() {	
 		controlBroadInfoPanel.setLayout(null);
 
-		controlBroadInfoTextArea.setBounds(LANDSCAPE_MARGIN, (CONTROL_BROAD_INFO_PANEL_HEIGHT-CONTROL_BROAD_INFO_TEXT_AREA_HEIGHT)/2+5, CONTROL_BROAD_INFO_TEXT_AREA_WIDTH, CONTROL_BROAD_INFO_TEXT_AREA_HEIGHT);
+		controlBroadInfoScrollPane.setBounds(LANDSCAPE_MARGIN, (CONTROL_BROAD_INFO_PANEL_HEIGHT-CONTROL_BROAD_INFO_TEXT_AREA_HEIGHT)/2+5, CONTROL_BROAD_INFO_TEXT_AREA_WIDTH, CONTROL_BROAD_INFO_TEXT_AREA_HEIGHT);
 		queryBtn.setBounds((CONTROL_BROAD_INFO_PANEL_WIDTH+LANDSCAPE_MARGIN+CONTROL_BROAD_INFO_TEXT_AREA_WIDTH-BTN_WIDTH)/2, (CONTROL_BROAD_INFO_PANEL_HEIGHT-BTN_HEIGHT)/2+5, BTN_WIDTH, BTN_HEIGHT);
 
-		controlBroadInfoPanel.add(controlBroadInfoTextArea, BorderLayout.NORTH);
+		controlBroadInfoPanel.add(controlBroadInfoScrollPane, BorderLayout.NORTH);
 		controlBroadInfoPanel.add(queryBtn, BorderLayout.NORTH);		
 	}
 
@@ -368,8 +367,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	 * Add action listener
 	 */
 	private void actionListener() {
-		openSerialPortBtn.addActionListener(this);
-//		closeSerialPortBtn.addActionListener(this);
+		SerialPorSwitchtBtn.addActionListener(this);
 		clearLogBtn.addActionListener(this);
 		sendBtn.addActionListener(this);
 		funcBtn.addActionListener(this);
@@ -428,7 +426,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				serialPort = SerialPortManager.openPort(commName, baudrate);
 				if (serialPort != null) {
 					addToLog(false, "串口已打开");
-					openSerialPortBtn.setText("Close");
+					SerialPorSwitchtBtn.setText("Close");
 					commChoice.setEnabled(false);
 					baudrateChoice.setEnabled(false);
 				}
@@ -463,7 +461,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		addToLog(false, "关闭串口 ===");
 		SerialPortManager.closePort(serialPort);
 		serialPort = null;
-		openSerialPortBtn.setText("Open");
+		SerialPorSwitchtBtn.setText("Open");
 		commChoice.setEnabled(true);
 		baudrateChoice.setEnabled(true);
 		addToLog(false, "串口已关闭");
@@ -587,15 +585,13 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		Object operaObj = e.getSource();
-		if (openSerialPortBtn == operaObj) { // 打开串口
+		if (SerialPorSwitchtBtn == operaObj) { 
 			if (null == serialPort) {
-				openSerialPort();
+				openSerialPort();	// 打开串口
 			} else {
-				closeSerialPort();
+				closeSerialPort();	// 关闭串口
 			}
-		} /*else if (closeSerialPortBtn == operaObj) { // 关闭串口
-			closeSerialPort();
-		}*/ else if (clearLogBtn == operaObj) { // 清除log
+		} else if (clearLogBtn == operaObj) { // 清除log
 			clearLog();
 		} else if (okBtn == operaObj) { // 确定
 			okBtnClick();
